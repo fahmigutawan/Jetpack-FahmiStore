@@ -1,0 +1,15 @@
+apply {
+    from("$rootDir/ui.gradle")
+}
+
+android {
+    namespace 'com.example.core_ui'
+}
+
+dependencies {
+    //Accompanist Loading
+    implementation "com.google.accompanist:accompanist-placeholder-material:$accompanist_version"
+
+    //Material
+    implementation "androidx.compose.material:material-android"
+}
