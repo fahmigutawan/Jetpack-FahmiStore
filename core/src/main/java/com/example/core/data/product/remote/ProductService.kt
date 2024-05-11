@@ -12,6 +12,9 @@ interface ProductService {
         @Query("limit") limit: Int
     ): Response<List<SingleProductResponse>>
 
+    @GET("products")
+    suspend fun getAllProduct(): Response<List<SingleProductResponse>>
+
     @GET("products/category/{category}")
     suspend fun getProductsByCategory(
         @Path("category") category: String

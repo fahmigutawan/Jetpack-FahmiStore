@@ -1,12 +1,12 @@
 package com.example.core.data.product
 
-import android.util.Log
 import com.example.core.data.product.local.ProductDao
 import com.example.core.data.product.remote.ProductRemoteSource
 import com.example.core.model.entity.BestSellerProductEntity
 import com.example.core.model.entity.TopRatedSellerProductEntity
 import com.example.core.model.response.product.SingleProductResponse
 import com.example.core.util.Resource
+import com.example.core.util.getResponse
 import com.example.core.util.getResponseWithTransaction
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -51,7 +51,7 @@ class ProductRepository @Inject constructor(
                 }
             }
         ) {
-            remoteSource.getProductsByOffsetAndLimit(
+            remoteSource.getProductsWithLimit(
                 limit = limit
             )
         }
@@ -93,9 +93,21 @@ class ProductRepository @Inject constructor(
                 }
             }
         ) {
-            remoteSource.getProductsByOffsetAndLimit(
+            remoteSource.getProductsWithLimit(
                 limit = limit
             )
         }
+    }
+
+    fun getAllProduct() = getResponse {
+        remoteSource.getAllProduct()
+    }
+
+    fun getProductWithLimit(limit: Int) = getResponse {
+        remoteSource.getProductsWithLimit(limit)
+    }
+
+    fun getProductByCategory(category: String) = getResponse {
+        remoteSource.getProductByCategory(category)
     }
 }

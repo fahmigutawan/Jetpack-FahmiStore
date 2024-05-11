@@ -24,8 +24,6 @@ import com.example.core.util.RoomTypeConverter
 @TypeConverters(RoomTypeConverter::class)
 abstract class MyRoomDb : RoomDatabase() {
     abstract fun productDao(): ProductDao
-
     abstract fun kategoriDao(): KategoriDao
-
     abstract fun bannerDao(): BannerDao
 }

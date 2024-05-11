@@ -27,7 +27,7 @@ import coil.compose.AsyncImage
 @Composable
 fun CategoryCard(
     name: String,
-    selected: Boolean = true,
+    selected: Boolean = false,
     onClick: () -> Unit
 ) {
     Box(

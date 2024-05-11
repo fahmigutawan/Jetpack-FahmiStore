@@ -50,7 +50,8 @@ import kotlinx.coroutines.delay
 fun DashboardScreen(
     onLihatSemuaBestSellerClick: () -> Unit,
     onLihatSemuaTopRatedClick: () -> Unit,
-    onLihatSemuaKategoriClick: () -> Unit
+    onLihatSemuaKategoriClick: () -> Unit,
+    onCategoryClick: (String) -> Unit
 ) {
     val viewModel = hiltViewModel<DashboardViewModel>()
     val topRatedState = viewModel.topRatedState.observeAsState()
@@ -126,7 +127,8 @@ fun DashboardScreen(
                 category.value?.let {
                     CategorySection(
                         state = it,
-                        onLihatSemuaClick = onLihatSemuaKategoriClick
+                        onLihatSemuaClick = onLihatSemuaKategoriClick,
+                        onCategoryClick = onCategoryClick
                     )
                 }
             }

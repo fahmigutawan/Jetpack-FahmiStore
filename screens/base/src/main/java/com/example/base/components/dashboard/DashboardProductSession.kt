@@ -70,8 +70,7 @@ fun DashboardProductSession(
             if(listState is Resource.Loading){
                 items(10){
                     ProductLoadingCard(
-                        modifier = Modifier
-                            .width(155.dp)
+                        modifier = Modifier.width(155.dp)
                     )
                 }
             }

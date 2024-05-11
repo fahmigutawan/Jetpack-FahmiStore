@@ -24,7 +24,8 @@ import com.example.core.util.Resource
 fun CategorySection(
     modifier: Modifier = Modifier,
     state: Resource<List<String>>,
-    onLihatSemuaClick:() -> Unit
+    onCategoryClick: (String) -> Unit,
+    onLihatSemuaClick: () -> Unit
 ) {
     Column {
         Row(
@@ -51,9 +52,7 @@ fun CategorySection(
                     it.forEach {
                         CategoryCard(
                             name = it,
-                            onClick = {
-                                /*TODO handle this later*/
-                            }
+                            onClick = { onCategoryClick(it) }
                         )
                     }
                 }

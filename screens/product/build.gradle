@@ -4,6 +4,7 @@ apply {
 
 dependencies {
     implementation(project(":core-ui"))
+    implementation(project(":screens:base"))
     implementation(project(":core"))
 }
 

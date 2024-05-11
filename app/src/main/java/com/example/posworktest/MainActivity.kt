@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.OtherHouses
@@ -50,7 +51,6 @@ import androidx.navigation.navArgument
 import com.example.base.presentation.dashboard.DashboardScreen
 import com.example.base.presentation.login.LoginScreen
 import com.example.core.util.ConnectionState
-import com.example.core.util.MainViewModel
 import com.example.core.util.mainViewModel
 import com.example.core_ui.layout.MyLayout
 import com.example.posworktest.ui.theme.POSWorkTestTheme
@@ -72,8 +72,9 @@ class MainActivity : ComponentActivity() {
             mainNavController = rememberNavController()
             mainViewModel = viewModel()
 
-            val connectivityManager =
-                getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connectivityManager = getSystemService(
+                Context.CONNECTIVITY_SERVICE
+            ) as ConnectivityManager
             val localLifecycle = LocalLifecycleOwner.current
 
             localLifecycle.lifecycleScope.launch {
@@ -127,6 +128,13 @@ class MainActivity : ComponentActivity() {
                                             keyboardOptions = KeyboardOptions(
                                                 imeAction = ImeAction.Search
                                             ),
+                                            keyboardActions = KeyboardActions(
+                                                onSearch = {
+                                                    mainNavController.navigate(
+                                                        "${MainNavRoutes.ListProduct.name}?type=${RecommendationType.NONE.name}"
+                                                    )
+                                                }
+                                            ),
                                             decorationBox = {
                                                 Box(
                                                     modifier = Modifier
@@ -166,7 +174,7 @@ class MainActivity : ComponentActivity() {
                                                                 .clickable(
                                                                     onClick = {
                                                                         mainNavController.navigate(
-                                                                            "${MainNavRoutes.ListProduct.name}/${RecommendationType.NONE.name}"
+                                                                            "${MainNavRoutes.ListProduct.name}?type=${RecommendationType.NONE.name}"
                                                                         )
                                                                     }
                                                                 ),
@@ -219,22 +227,27 @@ class MainActivity : ComponentActivity() {
                                 DashboardScreen(
                                     onLihatSemuaBestSellerClick = {
                                         mainNavController.navigate(
-                                            "${MainNavRoutes.ListProduct.name}/${RecommendationType.BEST_SELLER.name}"
+                                            "${MainNavRoutes.ListProduct.name}?type=${RecommendationType.BEST_SELLER.name}"
                                         )
                                     },
                                     onLihatSemuaTopRatedClick = {
                                         mainNavController.navigate(
-                                            "${MainNavRoutes.ListProduct.name}/${RecommendationType.TOP_RATED.name}"
+                                            "${MainNavRoutes.ListProduct.name}?type=${RecommendationType.TOP_RATED.name}"
                                         )
                                     },
                                     onLihatSemuaKategoriClick = {
 
+                                    },
+                                    onCategoryClick = {
+                                        mainNavController.navigate(
+                                            "${MainNavRoutes.ListProduct.name}?category=${it}"
+                                        )
                                     }
                                 )
                             }
 
                             composable(
-                                "${MainNavRoutes.ListProduct.name}/{recommendation_type}",
+                                "${MainNavRoutes.ListProduct.name}?type={recommendation_type}",
                                 arguments = listOf(
                                     navArgument("recommendation_type") {
                                         type = NavType.StringType
@@ -248,6 +261,23 @@ class MainActivity : ComponentActivity() {
                                 ListProductScreen(
                                     onBackClick = { onBackClick() },
                                     recommendationType = recommendationType
+                                )
+                            }
+
+                            composable(
+                                "${MainNavRoutes.ListProduct.name}?category={category}",
+                                arguments = listOf(
+                                    navArgument("category") {
+                                        type = NavType.StringType
+                                    }
+                                )
+                            ) {
+                                val category =
+                                    it.arguments?.getString("category") ?: ""
+
+                                ListProductScreen(
+                                    onBackClick = { onBackClick() },
+                                    category = category
                                 )
                             }
                         }
