@@ -3,5 +3,6 @@ package com.example.posworktest
 enum class MainNavRoutes {
     Login,
     Register,
-    Dashboard
+    Dashboard,
+    ListProduct
 }

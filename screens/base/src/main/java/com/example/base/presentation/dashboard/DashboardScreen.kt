@@ -47,7 +47,11 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(
+    onLihatSemuaBestSellerClick: () -> Unit,
+    onLihatSemuaTopRatedClick: () -> Unit,
+    onLihatSemuaKategoriClick: () -> Unit
+) {
     val viewModel = hiltViewModel<DashboardViewModel>()
     val topRatedState = viewModel.topRatedState.observeAsState()
     val category = viewModel.kategoriState.observeAsState()
@@ -77,21 +81,7 @@ fun DashboardScreen() {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { /*TODO*/ },
-                actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "")
-                    }
 
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Default.OtherHouses, contentDescription = "")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
-            )
         }
     ) {
         LazyColumn(
@@ -100,22 +90,6 @@ fun DashboardScreen() {
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            item {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                    value = viewModel.search.value,
-                    onValueChange = { viewModel.search.value = it },
-                    placeholder = {
-                        Text(text = "Cari sesuatu")
-                    },
-                    trailingIcon = {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "")
-                    }
-                )
-            }
-
             item {
                 HorizontalPager(
                     state = topBannerState
@@ -151,7 +125,8 @@ fun DashboardScreen() {
             item {
                 category.value?.let {
                     CategorySection(
-                        state = it
+                        state = it,
+                        onLihatSemuaClick = onLihatSemuaKategoriClick
                     )
                 }
             }
@@ -161,7 +136,7 @@ fun DashboardScreen() {
                     DashboardProductSession(
                         sessionName = "Best Seller",
                         state = bestSellerListState,
-                        onLihatSemuaClick = { /*TODO*/ },
+                        onLihatSemuaClick = onLihatSemuaBestSellerClick,
                         listState = it
                     )
                 }
@@ -172,7 +147,7 @@ fun DashboardScreen() {
                     DashboardProductSession(
                         sessionName = "Top Rated",
                         state = topRatedListState,
-                        onLihatSemuaClick = { /*TODO*/ },
+                        onLihatSemuaClick = onLihatSemuaTopRatedClick,
                         listState = it
                     )
                 }

@@ -23,8 +23,6 @@ class DashboardViewModel @Inject constructor(
     private val productRepository: ProductRepository,
     private val bannerRepository: BannerRepository
 ) : ViewModel() {
-    val search = mutableStateOf("")
-
     val kategoriState =
         MutableLiveData<Resource<List<String>>>(Resource.NotLoadedYet())
     val bestSellerState =

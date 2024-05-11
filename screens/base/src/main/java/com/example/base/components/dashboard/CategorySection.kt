@@ -23,7 +23,8 @@ import com.example.core.util.Resource
 @Composable
 fun CategorySection(
     modifier: Modifier = Modifier,
-    state: Resource<List<String>>
+    state: Resource<List<String>>,
+    onLihatSemuaClick:() -> Unit
 ) {
     Column {
         Row(
@@ -34,7 +35,7 @@ fun CategorySection(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(text = "Kategori")
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = onLihatSemuaClick) {
                 Text(text = "Lihat Semua")
             }
         }

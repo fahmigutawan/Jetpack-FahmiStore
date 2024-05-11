@@ -1,0 +1,12 @@
+apply {
+    from("$rootDir/ui.gradle")
+}
+
+dependencies {
+    implementation(project(":core-ui"))
+    implementation(project(":core"))
+}
+
+android {
+    namespace 'com.example.product'
+}

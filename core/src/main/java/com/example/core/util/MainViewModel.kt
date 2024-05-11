@@ -14,7 +14,11 @@ lateinit var mainViewModel: MainViewModel
 
 @HiltViewModel
 class MainViewModel @Inject constructor() : ViewModel() {
-    val showBottomBar = mutableStateOf(false)
+    val showBottomBar = mutableStateOf(true)
+    val showTopBar = mutableStateOf(true)
+
+    val search = mutableStateOf("")
+
     val showSnackbar = mutableStateOf(false)
     val snackbarMsg = mutableStateOf("")
     val showLoading = mutableStateOf(false)
