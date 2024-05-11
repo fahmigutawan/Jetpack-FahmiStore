@@ -162,7 +162,6 @@ fun DashboardScreen() {
                         sessionName = "Best Seller",
                         state = bestSellerListState,
                         onLihatSemuaClick = { /*TODO*/ },
-                        onEndReach = { /*TODO*/ },
                         listState = it
                     )
                 }
@@ -174,7 +173,6 @@ fun DashboardScreen() {
                         sessionName = "Top Rated",
                         state = topRatedListState,
                         onLihatSemuaClick = { /*TODO*/ },
-                        onEndReach = { /*TODO*/ },
                         listState = it
                     )
                 }

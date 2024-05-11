@@ -26,23 +26,32 @@ import coil.compose.AsyncImage
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoryCard(
-    name: String
+    name: String,
+    selected: Boolean = true,
+    onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .width(140.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surface)
-            .clickable {
-                /*TODO*/
-            }
+            .background(
+                when {
+                    selected -> MaterialTheme.colorScheme.primary
+                    else -> MaterialTheme.colorScheme.surface
+                }
+            )
+            .clickable { onClick() }
     ) {
         Text(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 12.dp)
                 .basicMarquee(Int.MAX_VALUE),
             text = name,
-            maxLines = 1
+            maxLines = 1,
+            color = when {
+                selected -> MaterialTheme.colorScheme.onPrimary
+                else -> MaterialTheme.colorScheme.onSurface
+            }
         )
     }
 }

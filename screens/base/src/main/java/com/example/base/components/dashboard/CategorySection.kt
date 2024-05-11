@@ -48,7 +48,12 @@ fun CategorySection(
             if (state is Resource.Success) {
                 state.data?.let {
                     it.forEach {
-                        CategoryCard(name = it)
+                        CategoryCard(
+                            name = it,
+                            onClick = {
+                                /*TODO handle this later*/
+                            }
+                        )
                     }
                 }
             }

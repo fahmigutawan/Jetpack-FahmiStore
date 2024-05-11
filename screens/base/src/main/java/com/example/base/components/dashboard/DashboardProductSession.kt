@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,7 +28,6 @@ fun DashboardProductSession(
     sessionName: String,
     state: LazyListState,
     onLihatSemuaClick: () -> Unit,
-    onEndReach: () -> Unit,
     listState: Resource<List<SingleProductResponse>>
 ) {
     Column {
@@ -44,12 +44,12 @@ fun DashboardProductSession(
             }
         }
 
-        MyLazyRow(
+        LazyRow(
             state = state,
-            onEndReached = onEndReach
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            item {
-                Spacer(modifier = Modifier.padding(horizontal = 12.dp))
+            item{
+                Spacer(modifier = Modifier.width(10.dp))
             }
 
             if (listState is Resource.Success) {
@@ -57,8 +57,7 @@ fun DashboardProductSession(
                     items(it) { item ->
                         ProductCard(
                             modifier = Modifier
-                                .width(170.dp)
-                                .padding(horizontal = 12.dp),
+                                .width(155.dp),
                             image = item.image,
                             nama = item.title,
                             harga = item.price.toString().toCurrencyFormat(),
@@ -72,15 +71,13 @@ fun DashboardProductSession(
                 items(10){
                     ProductLoadingCard(
                         modifier = Modifier
-                            .width(170.dp)
-                            .padding(horizontal = 12.dp)
+                            .width(155.dp)
                     )
                 }
             }
 
-
-            item {
-                Spacer(modifier = Modifier.padding(horizontal = 12.dp))
+            item{
+                Spacer(modifier = Modifier.width(10.dp))
             }
         }
     }
