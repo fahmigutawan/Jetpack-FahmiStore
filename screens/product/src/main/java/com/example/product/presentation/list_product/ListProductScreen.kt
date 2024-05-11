@@ -31,6 +31,7 @@ import com.example.product.util.RecommendationType
 @Composable
 fun ListProductScreen(
     onBackClick: () -> Unit,
+    onItemClick: (String) -> Unit,
     category: String? = null,
     recommendationType: String = RecommendationType.NONE.name
 ) {
@@ -140,9 +141,7 @@ fun ListProductScreen(
                                 image = item.image,
                                 nama = item.title,
                                 harga = item.price.toString().toCurrencyFormat(),
-                                onClick = {
-                                    //TODO Handle this later
-                                }
+                                onClick = { onItemClick(item.id) }
                             )
                         }
                     }

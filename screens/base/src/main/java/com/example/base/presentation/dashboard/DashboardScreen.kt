@@ -51,7 +51,8 @@ fun DashboardScreen(
     onLihatSemuaBestSellerClick: () -> Unit,
     onLihatSemuaTopRatedClick: () -> Unit,
     onLihatSemuaKategoriClick: () -> Unit,
-    onCategoryClick: (String) -> Unit
+    onCategoryClick: (String) -> Unit,
+    onItemClick: (String) -> Unit
 ) {
     val viewModel = hiltViewModel<DashboardViewModel>()
     val topRatedState = viewModel.topRatedState.observeAsState()
@@ -139,7 +140,8 @@ fun DashboardScreen(
                         sessionName = "Best Seller",
                         state = bestSellerListState,
                         onLihatSemuaClick = onLihatSemuaBestSellerClick,
-                        listState = it
+                        listState = it,
+                        onItemClick = onItemClick
                     )
                 }
             }
@@ -150,7 +152,8 @@ fun DashboardScreen(
                         sessionName = "Top Rated",
                         state = topRatedListState,
                         onLihatSemuaClick = onLihatSemuaTopRatedClick,
-                        listState = it
+                        listState = it,
+                        onItemClick = onItemClick
                     )
                 }
             }

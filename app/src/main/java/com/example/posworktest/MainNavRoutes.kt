@@ -4,5 +4,7 @@ enum class MainNavRoutes {
     Login,
     Register,
     Dashboard,
-    ListProduct
+    ListProduct,
+    DetailProduct,
+    Cart
 }

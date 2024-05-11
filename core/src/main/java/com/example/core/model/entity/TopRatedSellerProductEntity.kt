@@ -2,6 +2,7 @@ package com.example.core.model.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.core.model.response.product.ProductRatingResponse
 
 @Entity
 data class TopRatedSellerProductEntity(
@@ -10,5 +11,6 @@ data class TopRatedSellerProductEntity(
     val price: Double,
     val description: String,
     val category: String,
-    val image: String
+    val image: String,
+    val rating: ProductRatingResponse
 )

@@ -32,7 +32,8 @@ class ProductRepository @Inject constructor(
                             price = res.price,
                             description = res.description,
                             category = res.category,
-                            image = res.image
+                            image = res.image,
+                            rating = res.rating
                         )
                     }
                 )
@@ -46,7 +47,8 @@ class ProductRepository @Inject constructor(
                         price = entity.price,
                         description = entity.description,
                         category = entity.category,
-                        image = entity.image
+                        image = entity.image,
+                        rating = entity.rating
                     )
                 }
             }
@@ -74,7 +76,8 @@ class ProductRepository @Inject constructor(
                             price = res.price,
                             description = res.description,
                             category = res.category,
-                            image = res.image
+                            image = res.image,
+                            rating = res.rating
                         )
                     }
                 )
@@ -88,7 +91,8 @@ class ProductRepository @Inject constructor(
                         price = entity.price,
                         description = entity.description,
                         category = entity.category,
-                        image = entity.image
+                        image = entity.image,
+                        rating = entity.rating
                     )
                 }
             }

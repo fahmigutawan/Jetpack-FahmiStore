@@ -55,6 +55,7 @@ import com.example.core.util.mainViewModel
 import com.example.core_ui.layout.MyLayout
 import com.example.posworktest.ui.theme.POSWorkTestTheme
 import com.example.posworktest.util.SnackbarHandler
+import com.example.product.presentation.detail_product.DetailProductScreen
 import com.example.product.presentation.list_product.ListProductScreen
 import com.example.product.util.RecommendationType
 import dagger.hilt.android.AndroidEntryPoint
@@ -91,6 +92,17 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     )
+                }
+            }
+
+            mainNavController.addOnDestinationChangedListener { _, dest, _ ->
+                dest.route?.let {
+                    when{
+                        it.startsWith(MainNavRoutes.Dashboard.name) ||
+                            it.startsWith(MainNavRoutes.ListProduct.name) -> mainViewModel.showTopBar.value = true
+
+                        else -> mainViewModel.showTopBar.value = false
+                    }
                 }
             }
 
@@ -242,6 +254,11 @@ class MainActivity : ComponentActivity() {
                                         mainNavController.navigate(
                                             "${MainNavRoutes.ListProduct.name}?category=${it}"
                                         )
+                                    },
+                                    onItemClick = {
+                                        mainNavController.navigate(
+                                            "${MainNavRoutes.DetailProduct.name}?id=${it}"
+                                        )
                                     }
                                 )
                             }
@@ -260,7 +277,12 @@ class MainActivity : ComponentActivity() {
 
                                 ListProductScreen(
                                     onBackClick = { onBackClick() },
-                                    recommendationType = recommendationType
+                                    recommendationType = recommendationType,
+                                    onItemClick = {
+                                        mainNavController.navigate(
+                                            "${MainNavRoutes.DetailProduct.name}?id=${it}"
+                                        )
+                                    }
                                 )
                             }
 
@@ -277,7 +299,28 @@ class MainActivity : ComponentActivity() {
 
                                 ListProductScreen(
                                     onBackClick = { onBackClick() },
-                                    category = category
+                                    category = category,
+                                    onItemClick = {
+                                        mainNavController.navigate(
+                                            "${MainNavRoutes.DetailProduct.name}?id=${it}"
+                                        )
+                                    }
+                                )
+                            }
+
+                            composable(
+                                "${MainNavRoutes.DetailProduct.name}?id={id}",
+                                arguments = listOf(
+                                    navArgument("id") {
+                                        type = NavType.StringType
+                                    }
+                                )
+                            ) {
+                                val id = it.arguments?.getString("id") ?: ""
+
+                                DetailProductScreen(
+                                    onBackClick = { onBackClick() },
+                                    id = id
                                 )
                             }
                         }

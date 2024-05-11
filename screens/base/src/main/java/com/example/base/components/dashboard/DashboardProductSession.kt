@@ -28,6 +28,7 @@ fun DashboardProductSession(
     sessionName: String,
     state: LazyListState,
     onLihatSemuaClick: () -> Unit,
+    onItemClick:(String) -> Unit,
     listState: Resource<List<SingleProductResponse>>
 ) {
     Column {
@@ -61,7 +62,9 @@ fun DashboardProductSession(
                             image = item.image,
                             nama = item.title,
                             harga = item.price.toString().toCurrencyFormat(),
-                            onClick = {}
+                            onClick = {
+                                onItemClick(item.id)
+                            }
                         )
                     }
                 }
