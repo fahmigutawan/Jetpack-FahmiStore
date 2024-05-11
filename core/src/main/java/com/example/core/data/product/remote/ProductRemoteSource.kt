@@ -6,7 +6,6 @@ class ProductRemoteSource @Inject constructor(
     private val service: ProductService
 ) {
     suspend fun getProductsByOffsetAndLimit(
-        offset: Int,
         limit: Int
-    ) = service.getProductsByOffsetAndLimit(offset, limit)
+    ) = service.getProductsByOffsetAndLimit(limit)
 }

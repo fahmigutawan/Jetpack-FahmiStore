@@ -59,7 +59,7 @@ fun DashboardProductSession(
                             modifier = Modifier
                                 .width(170.dp)
                                 .padding(horizontal = 12.dp),
-                            image = item.images.firstOrNull() ?: "",
+                            image = item.image,
                             nama = item.title,
                             harga = item.price.toString().toCurrencyFormat(),
                             onClick = {}

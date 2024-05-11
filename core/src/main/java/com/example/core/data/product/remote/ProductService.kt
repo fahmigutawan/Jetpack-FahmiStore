@@ -8,7 +8,6 @@ import retrofit2.http.Query
 interface ProductService {
     @GET("products")
     suspend fun getProductsByOffsetAndLimit(
-        @Query("offset") offset: Int,
         @Query("limit") limit: Int
     ): Response<List<SingleProductResponse>>
 }

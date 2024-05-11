@@ -19,8 +19,7 @@ class ProductRepository @Inject constructor(
         /**
          * Karena API yang terbatas, jadi sistem rekomendasi masih berdasarkan angka random
          */
-        val randomNumber = (1..4).random()
-        val limit = 10
+        val limit = 5
 
         return getResponseWithTransaction(
             onRetrieved = {
@@ -33,7 +32,7 @@ class ProductRepository @Inject constructor(
                             price = res.price,
                             description = res.description,
                             category = res.category,
-                            images = res.images
+                            image = res.image
                         )
                     }
                 )
@@ -47,13 +46,12 @@ class ProductRepository @Inject constructor(
                         price = entity.price,
                         description = entity.description,
                         category = entity.category,
-                        images = entity.images
+                        image = entity.image
                     )
                 }
             }
         ) {
             remoteSource.getProductsByOffsetAndLimit(
-                offset = randomNumber * limit - limit,
                 limit = limit
             )
         }
@@ -63,8 +61,7 @@ class ProductRepository @Inject constructor(
         /**
          * Karena API yang terbatas, jadi sistem rekomendasi masih berdasarkan angka random
          */
-        val randomNumber = (1..4).random()
-        val limit = 10
+        val limit = 5
 
         return getResponseWithTransaction(
             onRetrieved = {
@@ -77,7 +74,7 @@ class ProductRepository @Inject constructor(
                             price = res.price,
                             description = res.description,
                             category = res.category,
-                            images = res.images
+                            image = res.image
                         )
                     }
                 )
@@ -91,13 +88,12 @@ class ProductRepository @Inject constructor(
                         price = entity.price,
                         description = entity.description,
                         category = entity.category,
-                        images = entity.images
+                        image = entity.image
                     )
                 }
             }
         ) {
             remoteSource.getProductsByOffsetAndLimit(
-                offset = randomNumber * limit - limit,
                 limit = limit
             )
         }

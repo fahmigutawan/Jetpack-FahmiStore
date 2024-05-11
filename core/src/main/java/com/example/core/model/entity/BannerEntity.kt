@@ -4,12 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class BestSellerProductEntity(
+data class BannerEntity(
     @PrimaryKey
     val id: String,
-    val title: String,
-    val price: Double,
-    val description: String,
-    val category: String,
     val image: String
 )

@@ -33,24 +33,30 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.example.base.components.dashboard.CategorySection
 import com.example.base.components.dashboard.DashboardProductSession
 import com.example.core.util.ConnectionState
+import com.example.core.util.Resource
 import com.example.core.util.mainViewModel
+import com.example.core_ui.modifier.loading
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun DashboardScreen() {
     val viewModel = hiltViewModel<DashboardViewModel>()
-    val topBannerState = rememberPagerState { 5 }
-    val bestSellerListState = rememberLazyListState()
-    val topRatedListState = rememberLazyListState()
     val topRatedState = viewModel.topRatedState.observeAsState()
     val category = viewModel.kategoriState.observeAsState()
     val bestSellerState = viewModel.bestSellerState.observeAsState()
+    val bannerState = viewModel.bannerState.observeAsState()
+
+    val topBannerState = rememberPagerState { bannerState.value?.data?.size ?: 1 }
+    val bestSellerListState = rememberLazyListState()
+    val topRatedListState = rememberLazyListState()
 
     LaunchedEffect(key1 = true) {
         while (true) {
@@ -62,9 +68,9 @@ fun DashboardScreen() {
             }
         }
     }
-    
-    LaunchedEffect(key1 = mainViewModel.internetState.value){
-        if(mainViewModel.internetState.value is ConnectionState.Available){
+
+    LaunchedEffect(key1 = mainViewModel.internetState.value) {
+        if (mainViewModel.internetState.value is ConnectionState.Available) {
             viewModel.initFetch()
         }
     }
@@ -113,15 +119,32 @@ fun DashboardScreen() {
             item {
                 HorizontalPager(
                     state = topBannerState
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .padding(horizontal = 24.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(Color.LightGray)
-                            .fillMaxWidth()
-                            .height(180.dp)
-                    )
+                ) { index ->
+                    if (bannerState.value is Resource.Loading) {
+                        Box(
+                            modifier = Modifier
+                                .padding(horizontal = 24.dp)
+                                .clip(RoundedCornerShape(16.dp))
+                                .fillMaxWidth()
+                                .height(180.dp)
+                                .loading()
+                        )
+                    }
+
+                    if (bannerState.value is Resource.Success) {
+                        bannerState.value?.data?.let {
+                            AsyncImage(
+                                modifier = Modifier
+                                    .padding(horizontal = 24.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .fillMaxWidth()
+                                    .height(180.dp),
+                                model = it[index].image,
+                                contentDescription = "",
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
                 }
             }
 
@@ -148,7 +171,7 @@ fun DashboardScreen() {
             item {
                 topRatedState.value?.let {
                     DashboardProductSession(
-                        sessionName = "Best Seller",
+                        sessionName = "Top Rated",
                         state = topRatedListState,
                         onLihatSemuaClick = { /*TODO*/ },
                         onEndReach = { /*TODO*/ },
