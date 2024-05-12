@@ -214,6 +214,8 @@ fun DetailProductScreen(
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
+
+                    item { Box(modifier = Modifier.padding(20.dp)) }
                 }
             }
         }

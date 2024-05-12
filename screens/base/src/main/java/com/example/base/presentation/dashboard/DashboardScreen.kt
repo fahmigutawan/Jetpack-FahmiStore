@@ -157,6 +157,10 @@ fun DashboardScreen(
                     )
                 }
             }
+
+            item {
+                Box(modifier = Modifier)
+            }
         }
     }
 }
