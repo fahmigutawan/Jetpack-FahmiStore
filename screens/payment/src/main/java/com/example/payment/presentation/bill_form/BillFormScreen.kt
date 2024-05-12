@@ -47,15 +47,10 @@ import com.example.payment.components.card.loading.ShipmentLoadingCard
 fun BillFormScreen(
     onBackClick: () -> Unit,
     onLanjutClick: (
-        tipeShipment: String,
+        address: String,
         namaShipment: String,
         hargaShipment: Long,
-        provinsi: String,
-        kota: String,
-        kecamatan: String,
-        kelurahan: String,
-        detail: String,
-        productId: String
+        totalHarga: Double
     ) -> Unit,
     id: String
 ) {
@@ -126,6 +121,13 @@ fun BillFormScreen(
                             SnackbarHandler.showSnackbar("Pastikan semua data telah terisi!")
                             return@MyButton
                         }
+
+                        onLanjutClick(
+                            viewModel.parsedAddress.value,
+                            viewModel.selectedShipment.value?.name ?: "",
+                            viewModel.selectedShipment.value?.fee ?: 0L,
+                            viewModel.quantity.value * (product.value?.data?.price ?: .0)
+                        )
                     }
                 ) {
                     Text(text = "Lanjut ke Pembayaran")

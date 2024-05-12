@@ -5,19 +5,14 @@
       <entry key="MyTopBarPreview">
         <State />
       </entry>
+      <entry key="PrevPaymentFinish">
+        <State />
+      </entry>
+      <entry key="PrevPaymentMethod">
+        <State />
+      </entry>
       <entry key="app">
         <State>
-          <runningDeviceTargetSelectedWithDropDown>
-            <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\Adri x Fahmi\.android\avd\Pixel_5_API_30_2.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </runningDeviceTargetSelectedWithDropDown>
           <targetSelectedWithDropDown>
             <Target>
               <type value="QUICK_BOOT_TARGET" />

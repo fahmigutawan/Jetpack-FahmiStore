@@ -71,6 +71,8 @@ import com.example.core_ui.layout.MyLayout
 import com.example.posworktest.ui.theme.POSWorkTestTheme
 import com.example.core.util.SnackbarHandler
 import com.example.payment.presentation.bill_form.BillFormScreen
+import com.example.payment.presentation.payment_finish.PaymentFinishScreen
+import com.example.payment.presentation.payment_method.PaymentMethodScreen
 import com.example.product.presentation.detail_product.DetailProductScreen
 import com.example.product.presentation.list_product.ListProductScreen
 import com.example.product.util.RecommendationType
@@ -527,8 +529,56 @@ class MainActivity : ComponentActivity() {
 
                                 BillFormScreen(
                                     onBackClick = { onBackClick() },
-                                    id = id
+                                    id = id,
+                                    onLanjutClick = { address, namaShipment, feeShipment, totalHarga ->
+                                        mainNavController.navigate("${MainNavRoutes.PaymentMethod.name}?nama_shipment=$namaShipment&fee_shipment=$feeShipment&totalHarga=$totalHarga&address=$address")
+                                    }
                                 )
+                            }
+
+                            composable(
+                                "${MainNavRoutes.PaymentMethod.name}?nama_shipment={nama_shipment}&fee_shipment={fee_shipment}&totalHarga={total_harga}&address={address}",
+                                arguments = listOf(
+                                    navArgument("nama_shipment"){
+                                        type = NavType.StringType
+                                    },
+                                    navArgument("fee_shipment"){
+                                        type = NavType.LongType
+                                    },
+                                    navArgument("total_harga"){
+                                        type = NavType.FloatType
+                                    },
+                                    navArgument("address"){
+                                        type = NavType.StringType
+                                    }
+                                )
+                            ){
+                                val namaShipment = it.arguments?.getString("nama_shipment") ?: "-"
+                                val feeShipment = it.arguments?.getLong("fee_shipment") ?: 0L
+                                val totalHarga = it.arguments?.getFloat("total_harga") ?: .0f
+                                val address = it.arguments?.getString("address") ?: ""
+
+                                PaymentMethodScreen(
+                                    address = address,
+                                    namaShipment = namaShipment,
+                                    feeShipment = feeShipment,
+                                    totalHarga = totalHarga,
+                                    onBackClick = {
+                                        onBackClick()
+                                    },
+                                    onProcessed = {
+                                        mainNavController.navigate(MainNavRoutes.PaymentFinish.name)
+                                    }
+                                )
+                            }
+
+                            composable(MainNavRoutes.PaymentFinish.name){
+                                PaymentFinishScreen {
+                                    onBackClick()
+                                    onBackClick()
+                                    onBackClick()
+                                    onBackClick()
+                                }
                             }
                         }
                     }

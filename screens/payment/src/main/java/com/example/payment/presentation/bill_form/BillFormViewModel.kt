@@ -33,6 +33,10 @@ class BillFormViewModel @Inject constructor(
     val product = MutableLiveData<Resource<SingleProductResponse>>(Resource.NotLoadedYet())
     val quantity = mutableStateOf(1)
 
+    val parsedAddress = derivedStateOf {
+        "${detailAddress.value}, ${selectedVillage.value?.name ?: "-"}, ${selectedDistrict.value?.name ?: "-"}, ${selectedCity.value?.name ?: "-"}, ${selectedProvince.value?.name ?: "-"}"
+    }
+
     val provinceState =
         MutableLiveData<Resource<List<SingleProvinceResponse>>>(Resource.NotLoadedYet())
     val cityState = MutableLiveData<Resource<List<SingleCityResponse>>>(Resource.NotLoadedYet())

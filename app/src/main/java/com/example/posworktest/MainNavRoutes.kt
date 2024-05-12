@@ -10,5 +10,7 @@ enum class MainNavRoutes {
     Profile,
     Aktivitas,
     Feed,
-    BillForm
+    BillForm,
+    PaymentMethod,
+    PaymentFinish
 }

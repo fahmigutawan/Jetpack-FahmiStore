@@ -14,6 +14,8 @@
             <option value="$PROJECT_DIR$/core-ui" />
             <option value="$PROJECT_DIR$/screens" />
             <option value="$PROJECT_DIR$/screens/base" />
+            <option value="$PROJECT_DIR$/screens/payment" />
+            <option value="$PROJECT_DIR$/screens/product" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
