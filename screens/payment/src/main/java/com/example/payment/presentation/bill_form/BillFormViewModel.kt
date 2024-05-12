@@ -1,14 +1,17 @@
 package com.example.payment.presentation.bill_form
 
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.data.location.LocationRepository
+import com.example.core.data.shipment.ShipmentRepository
 import com.example.core.model.response.location.SingleCityResponse
 import com.example.core.model.response.location.SingleDistrictResponse
 import com.example.core.model.response.location.SingleProvinceResponse
 import com.example.core.model.response.location.SingleVillageResponse
+import com.example.core.model.response.shipment.SingleShipmentResponse
 import com.example.core.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
@@ -18,14 +21,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BillFormViewModel @Inject constructor(
-    private val locationRepository: LocationRepository
+    private val locationRepository: LocationRepository,
+    private val shipmentRepository: ShipmentRepository
 ) : ViewModel() {
     val detailAddress = mutableStateOf("")
 
-    val provinceState = MutableLiveData<Resource<List<SingleProvinceResponse>>>(Resource.NotLoadedYet())
+    val provinceState =
+        MutableLiveData<Resource<List<SingleProvinceResponse>>>(Resource.NotLoadedYet())
     val cityState = MutableLiveData<Resource<List<SingleCityResponse>>>(Resource.NotLoadedYet())
-    val districtState = MutableLiveData<Resource<List<SingleDistrictResponse>>>(Resource.NotLoadedYet())
-    val villageState = MutableLiveData<Resource<List<SingleVillageResponse>>>(Resource.NotLoadedYet())
+    val districtState =
+        MutableLiveData<Resource<List<SingleDistrictResponse>>>(Resource.NotLoadedYet())
+    val villageState =
+        MutableLiveData<Resource<List<SingleVillageResponse>>>(Resource.NotLoadedYet())
 
     val selectedProvince = mutableStateOf<SingleProvinceResponse?>(null)
     val selectedCity = mutableStateOf<SingleCityResponse?>(null)
@@ -36,6 +43,16 @@ class BillFormViewModel @Inject constructor(
     val expandCity = mutableStateOf(false)
     val expandDistrict = mutableStateOf(false)
     val expandVilalge = mutableStateOf(false)
+
+    val allLocationFilled = derivedStateOf {
+        selectedProvince.value != null
+                && selectedCity.value != null
+                && selectedDistrict.value != null
+                && selectedVillage.value != null
+    }
+
+    val shipmentChoices =
+        MutableLiveData<Resource<List<SingleShipmentResponse>>>(Resource.NotLoadedYet())
 
     fun getAllProvince() {
         viewModelScope.launch {
@@ -65,6 +82,14 @@ class BillFormViewModel @Inject constructor(
         viewModelScope.launch {
             locationRepository.getAllVillageByDistrictId(id).collect {
                 villageState.postValue(it)
+            }
+        }
+    }
+
+    fun getAllShipmentChoices() {
+        viewModelScope.launch {
+            shipmentRepository.getAllShipmentChoices().collect {
+                shipmentChoices.postValue(it)
             }
         }
     }

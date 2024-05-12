@@ -1,12 +1,17 @@
 package com.example.payment.presentation.bill_form
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material3.BottomAppBar
@@ -28,8 +33,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.core.util.Resource
+import com.example.core.util.toCurrencyFormat
 import com.example.core_ui.button.MyButton
 import com.example.core_ui.dropdown.BasicDropdownField
+import com.example.core_ui.modifier.loading
+import com.example.payment.components.card.ShipmentCard
+import com.example.payment.components.card.loading.ShipmentLoadingCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,6 +51,7 @@ fun BillFormScreen(
     val city = viewModel.cityState.observeAsState()
     val district = viewModel.districtState.observeAsState()
     val village = viewModel.villageState.observeAsState()
+    val shipment = viewModel.shipmentChoices.observeAsState()
 
     LaunchedEffect(key1 = viewModel.selectedProvince.value) {
         viewModel.selectedProvince.value?.let {
@@ -64,6 +74,12 @@ fun BillFormScreen(
         viewModel.selectedDistrict.value?.let {
             viewModel.getAllVillageByDistrictId(it.id)
             viewModel.selectedVillage.value = null
+        }
+    }
+
+    LaunchedEffect(key1 = viewModel.allLocationFilled.value) {
+        if (viewModel.allLocationFilled.value) {
+            viewModel.getAllShipmentChoices()
         }
     }
 
@@ -97,7 +113,8 @@ fun BillFormScreen(
         LazyColumn(
             modifier = Modifier
                 .padding(it)
-                .fillMaxSize()
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
             item {
                 Column(
@@ -274,6 +291,89 @@ fun BillFormScreen(
                             Text(text = "Masukkan detail tambahan tentang alamat anda...")
                         }
                     )
+                }
+            }
+
+            item {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 24.dp),
+                        text = "Pilih Metode Pengiriman",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+
+                    if(shipment.value is Resource.NotLoadedYet || !viewModel.allLocationFilled.value){
+                        Text(
+                            modifier = Modifier.padding(horizontal = 24.dp),
+                            text = "* Masukkan lokasi lengkap agar dapat memilih metode pengiriman",
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+
+                    if(shipment.value is Resource.Loading){
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(horizontal = 24.dp)
+                                    .loading(),
+                                text = "TIPE",
+                                style = MaterialTheme.typography.titleSmall
+                            )
+
+                            Row(
+                                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                                horizontalArrangement = Arrangement.spacedBy(14.dp)
+                            ) {
+                                Spacer(modifier = Modifier.width(10.dp))
+
+                                repeat(5){
+                                    ShipmentLoadingCard()
+                                }
+
+                                Spacer(modifier = Modifier.width(10.dp))
+                            }
+                        }
+                    }
+
+                    if (shipment.value is Resource.Success) {
+                        shipment.value?.data?.let {
+                            it.forEach { item ->
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(
+                                        modifier = Modifier.padding(horizontal = 24.dp),
+                                        text = item.type,
+                                        style = MaterialTheme.typography.titleSmall
+                                    )
+
+                                    Row(
+                                        modifier = Modifier.horizontalScroll(rememberScrollState()),
+                                        horizontalArrangement = Arrangement.spacedBy(14.dp)
+                                    ) {
+                                        Spacer(modifier = Modifier.width(10.dp))
+
+                                        item.datas.forEach {
+                                            ShipmentCard(
+                                                name = it.name,
+                                                price = it.fee.toString().toCurrencyFormat(),
+                                                selected = false,
+                                                onClick = {
+                                                    //TODO Handle this later
+                                                }
+                                            )
+                                        }
+
+                                        Spacer(modifier = Modifier.width(10.dp))
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
