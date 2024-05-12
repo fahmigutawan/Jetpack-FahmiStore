@@ -12,6 +12,7 @@ import com.example.core.model.entity.BestSellerProductEntity
 import com.example.core.model.entity.CategoryEntity
 import com.example.core.model.entity.CityEntity
 import com.example.core.model.entity.DistrictEntity
+import com.example.core.model.entity.ProvinceEntity
 import com.example.core.model.entity.TopRatedSellerProductEntity
 import com.example.core.model.entity.VillageEntity
 import com.example.core.util.RoomTypeConverter
@@ -22,7 +23,7 @@ import com.example.core.util.RoomTypeConverter
         TopRatedSellerProductEntity::class,
         CategoryEntity::class,
         BannerEntity::class,
-        VillageEntity::class,
+        ProvinceEntity::class,
         CityEntity::class,
         DistrictEntity::class,
         VillageEntity::class

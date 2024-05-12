@@ -1,0 +1,281 @@
+package com.example.payment.presentation.bill_form
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.core.util.Resource
+import com.example.core_ui.button.MyButton
+import com.example.core_ui.dropdown.BasicDropdownField
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BillFormScreen(
+    onBackClick: () -> Unit,
+    id: String
+) {
+    val viewModel = hiltViewModel<BillFormViewModel>()
+    val province = viewModel.provinceState.observeAsState()
+    val city = viewModel.cityState.observeAsState()
+    val district = viewModel.districtState.observeAsState()
+    val village = viewModel.villageState.observeAsState()
+
+    LaunchedEffect(key1 = viewModel.selectedProvince.value) {
+        viewModel.selectedProvince.value?.let {
+            viewModel.getAllCityByProvinceId(it.id)
+            viewModel.selectedCity.value = null
+            viewModel.selectedDistrict.value = null
+            viewModel.selectedVillage.value = null
+        }
+    }
+
+    LaunchedEffect(key1 = viewModel.selectedCity.value) {
+        viewModel.selectedCity.value?.let {
+            viewModel.getAllDistrictByCityId(it.id)
+            viewModel.selectedDistrict.value = null
+            viewModel.selectedVillage.value = null
+        }
+    }
+
+    LaunchedEffect(key1 = viewModel.selectedDistrict.value) {
+        viewModel.selectedDistrict.value?.let {
+            viewModel.getAllVillageByDistrictId(it.id)
+            viewModel.selectedVillage.value = null
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { /*TODO*/ },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(imageVector = Icons.Default.ChevronLeft, contentDescription = "")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
+            )
+        },
+        bottomBar = {
+            BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.background
+            ) {
+                MyButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(text = "Lanjut ke Pembayaran")
+                }
+            }
+        }
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+        ) {
+            item {
+                Column(
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    Text(
+                        text = "Masukkan Alamat Pengiriman",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+
+                    BasicDropdownField(
+                        value = viewModel.selectedProvince.value?.name ?: "",
+                        expanded = viewModel.expandProvince.value,
+                        onExpandChange = { viewModel.expandProvince.value = it },
+                        placeholder = {
+                            Text(text = "Pilih Provinsi...")
+                        }
+                    ) {
+                        if (province.value is Resource.Loading) {
+                            item {
+                                CircularProgressIndicator()
+                            }
+                        }
+
+                        if (province.value is Resource.Success) {
+                            province.value?.data?.let {
+                                it.forEach {
+                                    item {
+                                        DropdownMenuItem(
+                                            text = { Text(text = it.name) },
+                                            onClick = {
+                                                viewModel.selectedProvince.value = it
+                                                viewModel.expandProvince.value = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    BasicDropdownField(
+                        value = viewModel.selectedCity.value?.name ?: "",
+                        expanded = viewModel.expandCity.value,
+                        onExpandChange = {
+                            viewModel.expandCity.value = it
+                        },
+                        placeholder = {
+                            Text(text = "Pilih Kota...")
+                        }
+                    ) {
+                        if (city.value is Resource.NotLoadedYet) {
+                            item {
+                                DropdownMenuItem(
+                                    text = { Text(text = "Harap pilih provinsi dahulu...") },
+                                    onClick = {}
+                                )
+                            }
+                        }
+                        if (city.value is Resource.Loading) {
+                            item {
+                                CircularProgressIndicator()
+                            }
+                        }
+                        if (city.value is Resource.Success) {
+                            city.value?.data?.let {
+                                it.forEach {
+                                    item {
+                                        DropdownMenuItem(
+                                            text = { Text(text = it.name) },
+                                            onClick = {
+                                                viewModel.selectedCity.value = it
+                                                viewModel.expandCity.value = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    BasicDropdownField(
+                        value = viewModel.selectedDistrict.value?.name ?: "",
+                        expanded = viewModel.expandDistrict.value,
+                        onExpandChange = {
+                            viewModel.expandDistrict.value = it
+                        },
+                        placeholder = {
+                            Text(text = "Pilih Kecamatan...")
+                        }
+                    ) {
+                        if (district.value is Resource.NotLoadedYet) {
+                            item {
+                                DropdownMenuItem(
+                                    text = { Text(text = "Harap pilih kota dahulu...") },
+                                    onClick = {}
+                                )
+                            }
+                        }
+                        if (district.value is Resource.Loading) {
+                            item {
+                                CircularProgressIndicator()
+                            }
+                        }
+
+                        if (district.value is Resource.Success) {
+                            district.value?.data?.let {
+                                it.forEach {
+                                    item {
+                                        DropdownMenuItem(
+                                            text = { Text(text = it.name) },
+                                            onClick = {
+                                                viewModel.selectedDistrict.value = it
+                                                viewModel.expandDistrict.value = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    BasicDropdownField(
+                        value = viewModel.selectedVillage.value?.name ?: "",
+                        expanded = viewModel.expandVilalge.value,
+                        onExpandChange = {
+                            viewModel.expandVilalge.value = it
+                        },
+                        placeholder = {
+                            Text(text = "Pilih Kelurahan...")
+                        }
+                    ) {
+                        if (village.value is Resource.NotLoadedYet) {
+                            item {
+                                DropdownMenuItem(
+                                    text = { Text(text = "Harap pilih kecamatan dahulu...") },
+                                    onClick = {}
+                                )
+                            }
+                        }
+                        if (village.value is Resource.Loading) {
+                            item {
+                                CircularProgressIndicator()
+                            }
+                        }
+
+                        if (village.value is Resource.Success) {
+                            village.value?.data?.let {
+                                it.forEach {
+                                    item {
+                                        DropdownMenuItem(
+                                            text = { Text(text = it.name) },
+                                            onClick = {
+                                                viewModel.selectedVillage.value = it
+                                                viewModel.expandVilalge.value = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 150.dp),
+                        value = viewModel.detailAddress.value,
+                        onValueChange = {
+                            viewModel.detailAddress.value = it
+                        },
+                        placeholder = {
+                            Text(text = "Masukkan detail tambahan tentang alamat anda...")
+                        }
+                    )
+                }
+            }
+        }
+    }
+}

@@ -70,6 +70,7 @@ import com.example.core_ui.button.MyButton
 import com.example.core_ui.layout.MyLayout
 import com.example.posworktest.ui.theme.POSWorkTestTheme
 import com.example.core.util.SnackbarHandler
+import com.example.payment.presentation.bill_form.BillFormScreen
 import com.example.product.presentation.detail_product.DetailProductScreen
 import com.example.product.presentation.list_product.ListProductScreen
 import com.example.product.util.RecommendationType
@@ -489,7 +490,7 @@ class MainActivity : ComponentActivity() {
                                         if (!mainViewModel.isLogin()) {
                                             mainViewModel.showShouldLoginPopup.value = true
                                         } else {
-                                            //TODO Handle navigation to form screen
+                                            mainNavController.navigate("${MainNavRoutes.BillForm.name}/$it")
                                         }
                                     },
                                     onCartClick = {
@@ -512,6 +513,22 @@ class MainActivity : ComponentActivity() {
 
                             composable(MainNavRoutes.Profile.name) {
                                 //TODO Handle this later
+                            }
+
+                            composable(
+                                "${MainNavRoutes.BillForm.name}/{id}",
+                                arguments = listOf(
+                                    navArgument("id") {
+                                        type = NavType.StringType
+                                    }
+                                )
+                            ) {
+                                val id = it.arguments?.getString("id") ?: ""
+
+                                BillFormScreen(
+                                    onBackClick = { onBackClick() },
+                                    id = id
+                                )
                             }
                         }
                     }

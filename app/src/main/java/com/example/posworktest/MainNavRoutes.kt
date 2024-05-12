@@ -9,5 +9,6 @@ enum class MainNavRoutes {
     Cart,
     Profile,
     Aktivitas,
-    Feed
+    Feed,
+    BillForm
 }
