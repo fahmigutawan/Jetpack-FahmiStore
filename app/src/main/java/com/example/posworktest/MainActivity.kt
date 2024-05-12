@@ -31,7 +31,6 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Screenshot
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -51,7 +50,6 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.Popup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -71,7 +69,7 @@ import com.example.core_ui.bottombar.MyBottomBar
 import com.example.core_ui.button.MyButton
 import com.example.core_ui.layout.MyLayout
 import com.example.posworktest.ui.theme.POSWorkTestTheme
-import com.example.posworktest.util.SnackbarHandler
+import com.example.core.util.SnackbarHandler
 import com.example.product.presentation.detail_product.DetailProductScreen
 import com.example.product.presentation.list_product.ListProductScreen
 import com.example.product.util.RecommendationType

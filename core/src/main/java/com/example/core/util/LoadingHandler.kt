@@ -1,4 +1,4 @@
-package com.example.posworktest.util
+package com.example.core.util
 
 import com.example.core.util.mainViewModel
 

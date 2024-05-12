@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.core.util.SnackbarHandler
 import com.example.core_ui.button.MyButton
 import com.example.core_ui.topbar.MyTopBar
 
@@ -40,6 +42,14 @@ fun LoginScreen(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 )
+            )
+        },
+        bottomBar = {
+            Text(
+                modifier = Modifier.padding(16.dp),
+                text =
+                "Karena belum ada API autentikasi dummy yang cocok untuk kasus ini, maka login akan menyimpan token dummy. Klik tombol Masuk, tidak harus mengisi data terlebih dahulu.",
+                color = MaterialTheme.colorScheme.error
             )
         }
     ) {
@@ -85,7 +95,11 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 50.dp),
-                onClick = { /*TODO*/ }
+                onClick = {
+                    viewModel.saveDummyToken()
+                    SnackbarHandler.showSnackbar("Berhasil Login")
+                    onBackClick()
+                }
             ) {
                 Text(text = "Masuk")
             }

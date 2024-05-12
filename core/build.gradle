@@ -13,6 +13,7 @@ android {
 
         buildConfigField("String", 'BASE_URL', secretProperties.getProperty("BASE_URL"))
         buildConfigField("String", 'BASE_URL_FAKE', secretProperties.getProperty("BASE_URL_FAKE"))
+        buildConfigField("String", 'BASE_URL_LOCATION', secretProperties.getProperty("BASE_URL_LOCATION"))
     }
 
     buildFeatures {
