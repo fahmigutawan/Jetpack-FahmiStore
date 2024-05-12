@@ -33,10 +33,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.core.util.Resource
+import com.example.core.util.SnackbarHandler
 import com.example.core.util.toCurrencyFormat
 import com.example.core_ui.button.MyButton
 import com.example.core_ui.dropdown.BasicDropdownField
 import com.example.core_ui.modifier.loading
+import com.example.payment.components.bill_form.BillProductCard
 import com.example.payment.components.card.ShipmentCard
 import com.example.payment.components.card.loading.ShipmentLoadingCard
 
@@ -44,6 +46,17 @@ import com.example.payment.components.card.loading.ShipmentLoadingCard
 @Composable
 fun BillFormScreen(
     onBackClick: () -> Unit,
+    onLanjutClick: (
+        tipeShipment: String,
+        namaShipment: String,
+        hargaShipment: Long,
+        provinsi: String,
+        kota: String,
+        kecamatan: String,
+        kelurahan: String,
+        detail: String,
+        productId: String
+    ) -> Unit,
     id: String
 ) {
     val viewModel = hiltViewModel<BillFormViewModel>()
@@ -52,6 +65,11 @@ fun BillFormScreen(
     val district = viewModel.districtState.observeAsState()
     val village = viewModel.villageState.observeAsState()
     val shipment = viewModel.shipmentChoices.observeAsState()
+    val product = viewModel.product.observeAsState()
+
+    LaunchedEffect(key1 = true) {
+        viewModel.getProductById(id)
+    }
 
     LaunchedEffect(key1 = viewModel.selectedProvince.value) {
         viewModel.selectedProvince.value?.let {
@@ -103,7 +121,12 @@ fun BillFormScreen(
             ) {
                 MyButton(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        if (!viewModel.allDataFilled.value) {
+                            SnackbarHandler.showSnackbar("Pastikan semua data telah terisi!")
+                            return@MyButton
+                        }
+                    }
                 ) {
                     Text(text = "Lanjut ke Pembayaran")
                 }
@@ -116,6 +139,33 @@ fun BillFormScreen(
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
+            item {
+                Column(
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    Text(
+                        text = "Detail Barang",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+
+                    if (product.value is Resource.Success) {
+                        product.value?.data?.let {
+                            BillProductCard(
+                                name = it.title,
+                                image = it.image,
+                                price = (viewModel.quantity.value * it.price).toString()
+                                    .toCurrencyFormat(),
+                                quantity = viewModel.quantity.value,
+                                onQuantityChange = {
+                                    viewModel.quantity.value = it
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
             item {
                 Column(
                     modifier = Modifier.padding(horizontal = 24.dp),
@@ -304,7 +354,7 @@ fun BillFormScreen(
                         style = MaterialTheme.typography.titleLarge
                     )
 
-                    if(shipment.value is Resource.NotLoadedYet || !viewModel.allLocationFilled.value){
+                    if (shipment.value is Resource.NotLoadedYet || !viewModel.allLocationFilled.value) {
                         Text(
                             modifier = Modifier.padding(horizontal = 24.dp),
                             text = "* Masukkan lokasi lengkap agar dapat memilih metode pengiriman",
@@ -312,7 +362,7 @@ fun BillFormScreen(
                         )
                     }
 
-                    if(shipment.value is Resource.Loading){
+                    if (shipment.value is Resource.Loading) {
                         Column(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
@@ -330,7 +380,7 @@ fun BillFormScreen(
                             ) {
                                 Spacer(modifier = Modifier.width(10.dp))
 
-                                repeat(5){
+                                repeat(5) {
                                     ShipmentLoadingCard()
                                 }
 
@@ -361,9 +411,9 @@ fun BillFormScreen(
                                             ShipmentCard(
                                                 name = it.name,
                                                 price = it.fee.toString().toCurrencyFormat(),
-                                                selected = false,
+                                                selected = viewModel.selectedShipment.value?.id == it.id,
                                                 onClick = {
-                                                    //TODO Handle this later
+                                                    viewModel.selectedShipment.value = it
                                                 }
                                             )
                                         }
