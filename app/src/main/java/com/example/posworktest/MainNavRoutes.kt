@@ -6,5 +6,8 @@ enum class MainNavRoutes {
     Dashboard,
     ListProduct,
     DetailProduct,
-    Cart
+    Cart,
+    Profile,
+    Aktivitas,
+    Feed
 }

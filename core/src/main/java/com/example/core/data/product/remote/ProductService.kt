@@ -19,4 +19,9 @@ interface ProductService {
     suspend fun getProductsByCategory(
         @Path("category") category: String
     ): Response<List<SingleProductResponse>>
+
+    @GET("products/{id}")
+    suspend fun getProductById(
+        @Path("id") id: String
+    ): Response<SingleProductResponse>
 }

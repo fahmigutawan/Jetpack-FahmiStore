@@ -12,4 +12,6 @@ class ProductRemoteSource @Inject constructor(
     suspend fun getAllProduct() = service.getAllProduct()
 
     suspend fun getProductByCategory(category: String) = service.getProductsByCategory(category)
+
+    suspend fun getProductById(id: String) = service.getProductById(id)
 }

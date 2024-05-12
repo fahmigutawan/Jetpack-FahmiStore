@@ -114,4 +114,8 @@ class ProductRepository @Inject constructor(
     fun getProductByCategory(category: String) = getResponse {
         remoteSource.getProductByCategory(category)
     }
+
+    fun getProductById(id: String) = getResponse {
+        remoteSource.getProductById(id)
+    }
 }

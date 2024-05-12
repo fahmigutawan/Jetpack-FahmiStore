@@ -2,6 +2,8 @@ package com.example.core.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import com.example.core.room.MyRoomDb
 import dagger.Module
 import dagger.Provides
@@ -20,6 +22,18 @@ class BaseModule {
     fun provideRetrofitClient() = Retrofit
         .Builder()
         .addConverterFactory(GsonConverterFactory.create())
+
+    @Provides
+    @Singleton
+    fun provideEncryptedSharedPreferences(
+        @ApplicationContext context: Context
+    ) = EncryptedSharedPreferences.create(
+        "fahmi-store-pref",
+        MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
+        context,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    )
 
     @Provides
     @Singleton
