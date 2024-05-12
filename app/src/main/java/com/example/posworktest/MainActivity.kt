@@ -6,6 +6,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -62,6 +63,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.base.presentation.dashboard.DashboardScreen
 import com.example.base.presentation.login.LoginScreen
+import com.example.base.presentation.profile.ProfileScreen
 import com.example.core.util.ConnectionState
 import com.example.core.util.mainViewModel
 import com.example.core_ui.bottombar.BottomBarItemData
@@ -77,6 +79,7 @@ import com.example.product.presentation.detail_product.DetailProductScreen
 import com.example.product.presentation.list_product.ListProductScreen
 import com.example.product.util.RecommendationType
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -90,6 +93,23 @@ class MainActivity : ComponentActivity() {
         setContent {
             mainNavController = rememberNavController()
             mainViewModel = viewModel()
+
+            BackHandler {
+                when (mainViewModel.currentRoute.value) {
+                    MainNavRoutes.Dashboard.name,
+                    MainNavRoutes.Feed.name,
+                    MainNavRoutes.Aktivitas.name,
+                    MainNavRoutes.Profile.name -> {
+                        if(mainViewModel.backClicked.value){
+                            this.finish()
+                        }else {
+                            mainViewModel.backClicked.value = true
+                        }
+                    }
+
+                    else -> onBackClick()
+                }
+            }
 
             val connectivityManager = getSystemService(
                 Context.CONNECTIVITY_SERVICE
@@ -154,6 +174,14 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(key1 = mainViewModel.internetState.value) {
                 if (mainViewModel.internetState.value is ConnectionState.Unavailable) {
                     SnackbarHandler.showSnackbar("Pastikan internet anda menyala...")
+                }
+            }
+
+            LaunchedEffect(key1 = mainViewModel.backClicked.value){
+                if(mainViewModel.backClicked.value){
+                    SnackbarHandler.showSnackbar("Klik kembali sekali lagi untuk keluar")
+                    delay(3000)
+                    mainViewModel.backClicked.value = false
                 }
             }
 
@@ -250,31 +278,45 @@ class MainActivity : ComponentActivity() {
                             if (mainViewModel.showBottomBar.value) {
                                 MyBottomBar(
                                     currentRoute = mainViewModel.currentRoute.value,
-                                    onItemClick = {
-                                        if (mainViewModel.currentRoute.value != it) {
-                                            mainNavController.navigate(it)
+                                    onItemClick = { route, needAuth ->
+                                        if(needAuth){
+                                            if (!mainViewModel.isLogin()) {
+                                                mainViewModel.showShouldLoginPopup.value = true
+                                            } else {
+                                                if (mainViewModel.currentRoute.value != route) {
+                                                    mainNavController.navigate(route)
+                                                }
+                                            }
+                                        } else {
+                                            if (mainViewModel.currentRoute.value != route) {
+                                                mainNavController.navigate(route)
+                                            }
                                         }
                                     },
                                     items = listOf(
                                         BottomBarItemData(
                                             route = MainNavRoutes.Dashboard.name,
                                             icon = Icons.Default.Home,
-                                            word = "Beranda"
+                                            word = "Beranda",
+                                            needAuth = false
                                         ),
                                         BottomBarItemData(
                                             route = MainNavRoutes.Feed.name,
                                             icon = Icons.Default.Screenshot,
-                                            word = "Feed"
+                                            word = "Feed",
+                                            needAuth = false
                                         ),
                                         BottomBarItemData(
                                             route = MainNavRoutes.Aktivitas.name,
                                             icon = Icons.Default.ListAlt,
-                                            word = "Aktivitas"
+                                            word = "Aktivitas",
+                                            needAuth = true
                                         ),
                                         BottomBarItemData(
                                             route = MainNavRoutes.Profile.name,
                                             icon = Icons.Default.Person,
-                                            word = "Profile"
+                                            word = "Profile",
+                                            needAuth = true
                                         )
                                     )
                                 )
@@ -514,7 +556,11 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable(MainNavRoutes.Profile.name) {
-                                //TODO Handle this later
+                                ProfileScreen(
+                                    onLogout = {
+                                        mainNavController.navigate(MainNavRoutes.Dashboard.name)
+                                    }
+                                )
                             }
 
                             composable(
@@ -539,20 +585,20 @@ class MainActivity : ComponentActivity() {
                             composable(
                                 "${MainNavRoutes.PaymentMethod.name}?nama_shipment={nama_shipment}&fee_shipment={fee_shipment}&totalHarga={total_harga}&address={address}",
                                 arguments = listOf(
-                                    navArgument("nama_shipment"){
+                                    navArgument("nama_shipment") {
                                         type = NavType.StringType
                                     },
-                                    navArgument("fee_shipment"){
+                                    navArgument("fee_shipment") {
                                         type = NavType.LongType
                                     },
-                                    navArgument("total_harga"){
+                                    navArgument("total_harga") {
                                         type = NavType.FloatType
                                     },
-                                    navArgument("address"){
+                                    navArgument("address") {
                                         type = NavType.StringType
                                     }
                                 )
-                            ){
+                            ) {
                                 val namaShipment = it.arguments?.getString("nama_shipment") ?: "-"
                                 val feeShipment = it.arguments?.getLong("fee_shipment") ?: 0L
                                 val totalHarga = it.arguments?.getFloat("total_harga") ?: .0f
@@ -572,7 +618,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            composable(MainNavRoutes.PaymentFinish.name){
+                            composable(MainNavRoutes.PaymentFinish.name) {
                                 PaymentFinishScreen {
                                     onBackClick()
                                     onBackClick()

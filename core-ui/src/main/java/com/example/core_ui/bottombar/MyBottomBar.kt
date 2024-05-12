@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MyBottomBar(
     currentRoute: String,
-    onItemClick: (route: String) -> Unit,
+    onItemClick: (route: String, needAuth: Boolean) -> Unit,
     items: List<BottomBarItemData>
 ) {
     val eachItemWidth = LocalConfiguration.current.screenWidthDp / items.size
@@ -38,7 +38,7 @@ fun MyBottomBar(
                         .fillMaxHeight()
                         .width(eachItemWidth.dp)
                         .clickable {
-                            onItemClick(item.route)
+                            onItemClick(item.route, item.needAuth)
                         }
                 ) {
                     Column(

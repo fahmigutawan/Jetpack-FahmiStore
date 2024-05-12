@@ -22,6 +22,7 @@ class MainViewModel @Inject constructor(
     val currentRoute = mutableStateOf("")
 
     val search = mutableStateOf("")
+    val backClicked = mutableStateOf(false)
 
     val showSnackbar = mutableStateOf(false)
     val snackbarMsg = mutableStateOf("")
